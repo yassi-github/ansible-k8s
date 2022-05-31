@@ -1,10 +1,39 @@
 ---
-- name: package.yaml
-  include_tasks: package.yaml
+# --- pre require tasks ---
 
-- name: config.yaml
-  include_tasks: config.yaml
+# Creates var example:
+# ```yaml
+# workers:
+#   - { name: usugumo, ipv4: "192.168.1.100" }
+#   - { name: shirakumo, ipv4: "192.168.1.101" }
+# ```
+- name: correct cluster worker members info
+  set_fact:
+    _workers: |
+      {% for item in groups['worker'] %}
+      - { name: {{ hostvars[item].ansible_hostname }}, ipv4: {{ hostvars[item].ansible_default_ipv4.address }} }
+      {% endfor %}
+- name: format
+  set_fact:
+    workers: "{{ _workers | from_yaml }}"
 
-- name: service.yaml
-  include_tasks: service.yaml
+# Creates var example:
+# ```yaml
+# masters:
+#   - { name: arare, ipv4: "192.168.1.200" }
+#   - { name: kasumi, ipv4: "192.168.1.201" }
+# ```
+- name: correct cluster master members info
+  set_fact:
+    _masters: |
+      {% for item in groups['master'] %}
+      - { name: {{ hostvars[item].ansible_hostname }}, ipv4: {{ hostvars[item].ansible_default_ipv4.address }} }
+      {% endfor %}
+- name: format
+  set_fact:
+    masters: "{{ _masters | from_yaml }}"
 
+# --- main tasks ---
+
+- name: configuration_file
+  include_tasks: configuration_file/main.yaml
