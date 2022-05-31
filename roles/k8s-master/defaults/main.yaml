@@ -1,1 +1,12 @@
 ---
+version:
+  cfssl: 1.6.1
+  kubectl: 1.24.0
+
+client_tools:
+  cfssl:
+    bin_url: "https://github.com/cloudflare/cfssl/releases/download/v{{ version.cfcssl }}/cfssl_{{ version.cfcssl }}_linux_amd64"
+  cfssl_json:
+    bin_url: "https://github.com/cloudflare/cfssl/releases/download/v{{ version.cfcssl }}/cfssljson_{{ version.cfcssl }}_linux_amd64"
+  kubectl:
+    bin_url: "https://storage.googleapis.com/kubernetes-release/release/v{{ version.kubectl }}/bin/linux/amd64/kubectl"
