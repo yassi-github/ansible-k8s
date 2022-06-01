@@ -1,1 +1,23 @@
 ---
+- name: create etcd install dest
+  file:
+    path: "{{ etcd.install_dir }}"
+    state: directory
+    recurse: yes
+
+- name: DL etcd
+  unarchive:
+    src: "{{ etcd.tar_url }}"
+    dest: "{{ etcd.install_dir }}"
+    remote_src: yes
+
+- name: copy etcd executable
+  copy:
+    src: "{{ etcd.install_dir }}/{{ etcd.dirname }}/{{ item }}"
+    dest: /usr/local/bin/{{ item }}
+    mode: '0755'
+    remote_src: yes
+  loop:
+  - etcd
+  - etcdctl
+  - etcdutl
