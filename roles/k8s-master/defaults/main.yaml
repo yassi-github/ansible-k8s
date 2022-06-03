@@ -1,1 +1,5 @@
 ---
+cert_files:
+  - { k8s: kubernetes-key.pem, etcd: etcd-key }
+  - { k8s: kubernetes.pem, etcd: etcd-cert }
+  - { k8s: ca.pem, etcd: etcd-ca }
