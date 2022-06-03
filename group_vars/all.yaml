@@ -1,3 +1,54 @@
 ---
 ansible_user: vagrant
 ansible_become_password: vagrant
+
+### DO NOT EDIT ! SCRIPTED VARIABLES ###
+
+# START of magic for generate `workers`, `workers_hostname_is_uniq` var
+_workers: |
+  {% for group_name in groups['worker'] %}
+  - { name: {{ hostvars[group_name].ansible_hostname }}, ipv4: {{ hostvars[group_name].ansible_default_ipv4.address }} }
+  {% endfor %}
+# END of magic
+
+# `workers` contains worker node info as listed dict (name, ipv4)
+# Example:
+# ```
+# workers:
+#   - { name: "hostname1", ipv4: 192.168.121.1 }
+#   - { name: "hostname2", ipv4: 192.168.121.2 }
+#   - { name: "hostname3", ipv4: 192.168.121.3 }
+# ```
+workers: "{{ _workers | from_yaml }}"
+
+
+# START of generate `masters`, `masters_hostname_is_uniq` var
+_masters_hostname: |
+  {% for item in groups['master'] %}
+  - {{ hostvars[item].ansible_hostname }}
+  {% endfor %}
+_masters_ipv4: |
+  {% for item in groups['master'] %}
+  - {{ hostvars[item].ansible_default_ipv4.address }}
+  {% endfor %}
+_masters_hostname_list: "{{ _masters_hostname | from_yaml }}"
+_masters_ipv4_list: "{{ _masters_ipv4 | from_yaml }}"
+_masters: |
+  {% for name, ipv4 in _masters_ipv4_list | zip(_masters_hostname_list) %}
+  - { name: {{ name }}, ipv4: {{ ipv4 }} }
+  {% endfor %}
+# END of magic
+
+# `masters` contains worker node info as listed dict (name, ipv4)
+# Example:
+# ```
+# masters:
+#   - { name: "hostname1", ipv4: 192.168.121.10 }
+#   - { name: "hostname2", ipv4: 192.168.121.20 }
+#   - { name: "hostname3", ipv4: 192.168.121.30 }
+# ```
+masters: "{{ _masters | from_yaml }}"
+
+# hostname is uniq? (bool)
+# False if hostname duplicated
+masters_hostname_is_uniq: "{{ (_masters_hostname_list | unique | count) == (_masters_hostname_list | count) }}"
