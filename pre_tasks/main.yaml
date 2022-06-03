@@ -1,0 +1,8 @@
+---
+- name: check all master node hostname is unique
+  fail:
+    msg: |
+      master node hostname has duplicated.
+      please change hostname for identificating each other.
+      masters: {{ masters }}
+  when: not masters_hostname_is_uniq
