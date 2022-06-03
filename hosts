@@ -1,2 +1,10 @@
-[server]
+[master]
 cosmos1-tmp
+
+[worker]
+cosmos1-tmp2
+cosmos1-tmp3
+
+[cluster:children]
+master
+worker
