@@ -22,8 +22,6 @@ ExecStart=/usr/local/bin/etcd \
   --initial-cluster {% for item in masters %}{{ item.name }}=https://{{ item.ipv4 }}:2380,{% endfor %} \
   --initial-cluster-state new \
   --data-dir={{ etcd.data_dir }} \
-  #--auto-tls \
-  #--peer-auto-tls \
   # slow disk cause timeout, so inclease deadline
   --heartbeat-interval={{ etcd.heartbeat_interval }} \
   --election-timeout={{ etcd.election_timeout }}

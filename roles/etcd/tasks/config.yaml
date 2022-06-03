@@ -27,7 +27,6 @@
     state: directory
     recurse: yes
 
-# TODO: set `master` var
 - name: create etcd.service
   template:
     src: etcd.service.j2
