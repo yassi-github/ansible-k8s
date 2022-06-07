@@ -1,0 +1,28 @@
+---
+# TODO: set `cert_dir` var
+- name: etcd-secrets encode
+  shell: cat {{ cert_dir }}/{{ item.k8s }} | base64 -w 0
+  loop: "{{ cert_files }}"
+  register: etcd_secrets_encode
+
+- name: create /calico-secrets dir
+  file:
+    path: /calico-secrets
+    state: directory
+
+- name: copy certs to calico secrets
+  copy:
+    src: "{{ cert_dir }}/{{ item.k8s }}"
+    dest: "/calico-secrets/{{ item.etcd }}"
+    remote_src: yes
+    mode: '0700'
+  loop: "{{ cert_files }}"
+
+# TODO: set `masters` var
+- name: apply calico manifest
+  kubernetes.core.k8s:
+    state: present
+    template: calico.yaml.j2
+    apply: yes
+    server_side_apply:
+      field_manager: ansible
