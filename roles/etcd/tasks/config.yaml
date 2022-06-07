@@ -1,1 +1,35 @@
 ---
+- name: mkdir etcd conf
+  file:
+    path: "{{ item }}"
+    mode: '0700'
+    state: directory
+  loop:
+  - "{{ etcd.conf_dir }}"
+  - "{{ etcd.data_dir }}"
+
+# TODO: set `certdir` var
+- name: copy pems
+  copy:
+    src: "{{ certdir }}/{{ item }}"
+    dest: "{{ etcd.conf_dir }}/{{ item }}"
+    remote_src: yes
+  loop:
+  - "ca.pem"
+  - "kubernetes-key.pem"
+  - "kubernetes.pem"
+  notify: restart etcd
+
+- name: create usr local systemd dir
+  file:
+    path: /usr/local/lib/systemd/system
+    mode: '0755'
+    state: directory
+    recurse: yes
+
+- name: create etcd.service
+  template:
+    src: etcd.service.j2
+    dest: /usr/local/lib/systemd/system/etcd.service
+    mode: '0644'
+  notify: restart etcd

@@ -1,1 +1,13 @@
 ---
+version:
+  etcd: 3.5.4
+
+etcd:
+  tar_url: "https://github.com/etcd-io/etcd/releases/download/v{{ version.etcd }}/etcd-v{{ version.etcd }}-linux-amd64.tar.gz"
+  dirname: "etcd-v{{ version.etcd }}-linux-amd64"
+  data_dir: /var/lib/etcd
+  conf_dir: /etc/etcd
+  install_dir: /usr/local/src/etcd
+  # https://etcd.io/docs/v3.5/faq/#what-does-the-etcd-warning-failed-to-send-out-heartbeat-on-time-mean
+  heartbeat_interval: 500
+  election_timeout: 2500

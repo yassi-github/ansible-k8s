@@ -1,1 +1,8 @@
 ---
+- name: start etcd
+  systemd:
+    name: etcd.service
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  timeout: 15

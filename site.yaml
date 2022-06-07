@@ -1,4 +1,9 @@
 ---
-- hosts: server
+- hosts: cluster
+  pre_tasks:
+    - name: pre task start
+      include_tasks: pre_tasks/main.yaml
+
+- hosts: cluster
   roles:
-    - role: sample_role
+    - role: etcd
