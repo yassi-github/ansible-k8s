@@ -8,3 +8,9 @@ ansible_become_password: !vault |
           38363730373362623232346439623437373463623034303038353161663231326538376135356361
           6433386163393832350a383838653637623366633664326238656461386535623764346165373335
           3337
+
+k8s:
+  cluster_name: kubernetes-the-hard-way
+  # IP address for the Kubernetes API Server
+  # To support HA, external load balancer fronting the Kubernetes API Servers
+  public_address: 192.168.x.x
