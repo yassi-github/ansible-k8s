@@ -52,3 +52,5 @@
 - name: ensure kubelet kubeconfig exists with setting default context for admin
   command:
     cmd: kubectl config use-context default --kubeconfig=admin.kubeconfig
+
+# kubeconfig の Path を k8s に認識してもらうためには KUBECONFIG 環境変数が必要かも？
