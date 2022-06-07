@@ -1,0 +1,54 @@
+---
+# The kube-controller-manager Kubernetes Configuration File
+
+- name: ensure kubelet kubeconfig exists with setting cluster for kube-controller-manager
+  command:
+    cmd: kubectl config set-cluster {{ k8s.cluster_name }} --certificate-authority=ca.pem --embed-certs=true --server=https://127.0.0.1:6443 --kubeconfig=kube-controller-manager.kubeconfig
+
+- name: ensure kubelet kubeconfig exists with setting credential for kube-controller-manager
+  command:
+    cmd: kubectl config set-credentials system:kube-controller-manager --client-certificate=kube-controller-manager.pem --client-key=kube-controller-manager-key.pem --embed-certs=true --kubeconfig=kube-controller-manager.kubeconfig
+
+- name: ensure kubelet kubeconfig exists with creating default cluster for kube-controller-manager
+  command:
+    cmd: kubectl config set-context default --cluster={{ k8s.cluster_name }} --user=system:kube-controller-manager --kubeconfig=kube-controller-manager.kubeconfig
+
+- name: ensure kubelet kubeconfig exists with setting default context for kube-controller-manager
+  command:
+    cmd: kubectl config use-context default --kubeconfig=kube-controller-manager.kubeconfig
+
+# The kube-scheduler Kubernetes Configuration File
+
+- name: ensure kubelet kubeconfig exists with setting cluster for kube-scheduler
+  command:
+    cmd: kubectl config set-cluster {{ k8s.cluster_name }} --certificate-authority=ca.pem --embed-certs=true --server=https://127.0.0.1:6443 --kubeconfig=kube-scheduler.kubeconfig
+
+- name: ensure kubelet kubeconfig exists with setting credential for kube-scheduler
+  command:
+    cmd: kubectl config set-credentials system:kube-scheduler --client-certificate=kube-scheduler.pem --client-key=kube-scheduler-key.pem --embed-certs=true --kubeconfig=kube-scheduler.kubeconfig
+
+- name: ensure kubelet kubeconfig exists with creating default cluster for kube-scheduler
+  command:
+    cmd: kubectl config set-context default --cluster={{ k8s.cluster_name }} --user=system:kube-scheduler --kubeconfig=kube-scheduler.kubeconfig
+
+- name: ensure kubelet kubeconfig exists with setting default context for kube-scheduler
+  command:
+    cmd: kubectl config use-context default --kubeconfig=kube-scheduler.kubeconfig
+
+# The admin Kubernetes Configuration File
+
+- name: ensure kubelet kubeconfig exists with setting cluster for admin
+  command:
+    cmd: kubectl config set-cluster {{ k8s.cluster_name }} --certificate-authority=ca.pem --embed-certs=true --server=https://127.0.0.1:6443 --kubeconfig=admin.kubeconfig
+
+- name: ensure kubelet kubeconfig exists with setting credential for admin
+  command:
+    cmd: kubectl config set-credentials system:admin --client-certificate=admin.pem --client-key=admin-key.pem --embed-certs=true --kubeconfig=admin.kubeconfig
+
+- name: ensure kubelet kubeconfig exists with creating default cluster for admin
+  command:
+    cmd: kubectl config set-context default --cluster={{ k8s.cluster_name }} --user=system:admin --kubeconfig=admin.kubeconfig
+
+- name: ensure kubelet kubeconfig exists with setting default context for admin
+  command:
+    cmd: kubectl config use-context default --kubeconfig=admin.kubeconfig
